@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center mt-5">
+    <h1 class="display-1 fw-bold text-danger">429</h1>
+    <h2>Too Many Requests</h2>
+    <p>You have made too many login attempts. Please wait 1 minute and try again.</p>
+    <a href="{{ url_for('login') }}" class="btn btn-primary">Try Again</a>
+</div>
+{% endblock %}

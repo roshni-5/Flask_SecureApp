@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Your Contacts</h2>
+    <a href="{{ url_for('add_contact') }}" class="btn btn-primary">Add New Contact</a>
+</div>
+<hr>
+{% if contacts %}
+<div class="table-responsive shadow-sm rounded">
+    <table class="table table-striped table-hover align-middle mb-0 bg-white">
+        <thead class="table-dark">
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Message</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contact in contacts %}
+            <tr>
+                <td class="fw-bold">{{ contact.name }}</td>
+                <td><a href="mailto:{{ contact.email }}">{{ contact.email }}</a></td>
+                <td>{{ contact.phone or '<span class="text-muted">N/A</span>'|safe }}</td>
+                <td>{{ contact.message or '<span class="text-muted">None</span>'|safe }}</td>
+                <td class="text-center">
+                    <a href="{{ url_for('edit_contact', contact_id=contact.id) }}"
+                        class="btn btn-sm btn-info text-white me-1">Edit</a>
+                    <!-- Direct deletion prevention using a POST form with CSRF -->
+                    <form action="{{ url_for('delete_contact', contact_id=contact.id) }}" method="POST"
+                        style="display:inline;">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                        <button type="submit" class="btn btn-sm btn-danger"
+                            onclick="return confirm('Are you sure you want to delete this contact?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info text-center py-5 shadow-sm">
+    <h4 class="alert-heading">No Contacts Found</h4>
+    <p>You haven't added any contacts yet.</p>
+    <a href="{{ url_for('add_contact') }}" class="btn btn-outline-primary mt-2">Create First Contact</a>
+</div>
+{% endif %}
+{% endblock %}
